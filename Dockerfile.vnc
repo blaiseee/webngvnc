@@ -1,0 +1,59 @@
+FROM debian:11-slim
+ENV DISPLAY=:0
+    # VNC_PORT=5900 \
+    # NO_VNC_PORT=8080 \
+    # VNC_SERVER=localhost
+    
+ENV HOME=/app \
+    DEBIAN_FRONTEND=noninteractive \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US.UTF-8 \
+    LC_ALL=C.UTF-8  
+    # DISPLAY_WIDTH=1024 \
+    # DISPLAY_HEIGHT=768 \
+    # RUN_FLUXBOX=yes \
+    # RUN_XTERM=yes
+
+# EXPOSE $VNC_PORT
+EXPOSE 8080
+
+COPY . /app
+
+# RUN set -ex
+RUN apt-get update && \
+    apt-get install -y \
+    # bash \
+    # fluxbox \
+    net-tools \
+    novnc \
+    # websockify \
+    supervisor \
+    # tigervnc-standalone-server \
+    x11vnc \
+    xvfb \
+    xauth \
+    # apt-utils \
+    # nginx \
+    dbus-x11 \
+    libdbus-glib-1-2 \
+    # xfonts-base \
+    xinit \
+    xterm \
+    icewm \
+    xfonts-base \
+    chromium && \
+    rm -rf /var/lib/apt/lists/*
+RUN ln -sfn /usr/bin/chromium /usr/bin/chromium-browser
+# RUN ./src/common/install/firefox.sh
+
+RUN ./app/src/common/scripts/chromium-init.sh
+# RUN apt-get purge -y pm-utils *screensaver*
+RUN apt-get clean -y
+
+
+# CMD Xvfb $DISPLAY -screen 0 1024x768x24 \
+#     && fluxbox \
+#     && x11vnc -display $DISPLAY -forever -nopw -rfbport $VNC_PORT \
+    # && websockify -D --web /usr/share/novnc $NO_VNC_PORT localhost:$VNC_PORT
+CMD ["/app/entrypoint.sh"]
+# CMD ["/app/supervisord.conf"]
