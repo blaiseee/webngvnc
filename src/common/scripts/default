@@ -1,0 +1,22 @@
+server {
+    listen 80 default_server;
+    root /headless/noVNC;
+    index index.html index.htm vnc_lite.html;
+    #root /var/www/html;
+    #index index.html index.htm index.nginx-debian.html;
+
+    server_name myapp.loc;
+        
+    location / {
+        try_files $uri $uri/ /index.html;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_read_timeout 61s;
+        proxy_buffering off;
+        proxy_pass http://localhost:6901;
+    }
+}

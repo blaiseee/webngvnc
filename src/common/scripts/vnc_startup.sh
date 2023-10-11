@@ -77,7 +77,7 @@ if [[ $DEBUG == true ]]; then
   echo "$NO_VNC_HOME/utils/novnc_proxy --vnc localhost:$VNC_PORT --listen $NO_VNC_PORT"
 fi
 
-$NO_VNC_HOME/utils/novnc_proxy --vnc localhost:$VNC_PORT --listen $NO_VNC_POST > $STARTUPDIR/no_vnc_startup.log 2>&1 & PID_SUB=$!
+$NO_VNC_HOME/utils/novnc_proxy --vnc 127.0.0.1:$VNC_PORT --listen $NO_VNC_POST > $STARTUPDIR/no_vnc_startup.log 2>&1 & PID_SUB=$!
 
 vncserver -kill $DISPLAY &> $STARTUPDIR/vnc_startup.log \
   || rm -rfv /tmp/.X*-lock /tmp/.X11-unix &> $STARTUPDIR/vnc_startup.log \
